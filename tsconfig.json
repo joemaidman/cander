@@ -3,6 +3,7 @@
        "emitDecoratorMetadata": true,
        "experimentalDecorators": true,
        "importHelpers": true,
+       "jsx": "react",
        "lib": ["es2015", "dom"],
        "module": "commonjs",
        "moduleResolution": "node",

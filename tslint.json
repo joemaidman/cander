@@ -15,7 +15,9 @@
        "no-trailing-whitespace": false,
        "no-var-keyword": true,
        "no-unused-variable": [
-          true
+          true,
+          "react",
+          "react/addons"
        ],
        "one-line": [
           true,
@@ -56,4 +58,3 @@
        ]
     }
  }
- 

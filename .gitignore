@@ -1,3 +1,6 @@
 node_modules
 karmaResults
 resources
+package-lock.json
+resources/public/bundle.js
+resources/public/bundle.js.map
