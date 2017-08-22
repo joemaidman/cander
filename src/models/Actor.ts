@@ -1,4 +1,4 @@
-export interface Iactor {
+export interface Actor {
     x: number;
     y: number;
     width: number;

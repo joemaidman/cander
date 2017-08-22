@@ -1,6 +1,6 @@
-import { Iactor } from './Iactor';
+import { Actor } from './Actor';
 
-export default class Square implements Iactor {
+export default class Square implements Actor {
 
     constructor(x: number, y: number, width: number, height: number,
         red: number, green: number, blue: number, opacity: number) {

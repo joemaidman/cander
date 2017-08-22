@@ -1,34 +1,14 @@
-import { Iactor } from './models/Iactor';
-import Engine from './models/engine'
+import { Actor } from './models/Actor';
+import Engine from './models/engine';
 
 export default class Game {
 
-    public actors: Array<Iactor>;
-    private engine: Engine;
+  public actors: Array<Actor>;
+  private engine: Engine;
 
-    Game(actors: Array<Iactor>) {
-        this.actors = actors || new Array<Iactor>();
+  Game(actors: Array<Actor>) {
+    this.actors = actors || new Array<Actor>();
 
-    }
-
-    start() {
-        this.engine.start();
-    }
-
-    reset() {
-        this.engine.reset();
-    }
-
-    pause() {
-        this.engine.pause();
-    }
-
-    stop() {
-        this.engine.stop();
-    }
-
-    add_actor(actor: Iactor) {
-        this.actors.push(actor);
-    }
+  }
 
 }

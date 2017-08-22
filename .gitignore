@@ -5,3 +5,4 @@ package-lock.json
 resources/public/bundle.js
 resources/public/bundle.js.map
 .DS_Store
+.npmrc
