@@ -8,7 +8,7 @@ describe('Square', () => {
     let square: Square;
 
     before(() => {
-        square = new Square(1, 1, 1, 1);
+        square = new Square(1, 1, 1, 1, 1, 1, 1, 1);
     });
 
     describe('Given a square has been created', () => {
