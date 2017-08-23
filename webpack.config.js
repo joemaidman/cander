@@ -1,8 +1,8 @@
 module.exports = {
-    entry: "./src/cander.ts",
+    entry: "./demo/demo.ts",
     output: {
         filename: "bundle.js",
-        path: __dirname + "/resources/public"
+        path: __dirname + "/demo/public"
     },
 
     // Enable sourcemaps for debugging webpack's output.

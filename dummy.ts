@@ -1,3 +1,4 @@
+
 // var box = document.getElementById('box') || new HTMLCanvasElement(),
 // fpsDisplay = document.getElementById('fpsDisplay') || new HTMLCanvasElement(),
 // boxPos = 10,
@@ -99,6 +100,6 @@
 
 // start();
 
-export default class Engine{
+// export default class Engine{
 
-}
+// }

@@ -1,23 +1,26 @@
 import { expect } from 'chai';
 import * as chai from 'chai';
 
-import Square from '../src/models/square';
+import Square from '../src/models/Square';
+import Strategy from '../src/interfaces/Strategy'
 
 describe('Square', () => {
 
     let square: Square;
+    let strategies: Array<Strategy>;
 
     before(() => {
-        square = new Square(1, 1, 1, 1, 1, 1, 1, 1);
+        strategies = new Array<Strategy>();
+        
+        square = new Square(1, 1, 1, 1, 1, 1, 1, 1, strategies);
     });
 
     describe('Given a square has been created', () => {
 
-        it('then it has a width', () => {
-            expect(square.width).to.equal(1);
-        });
+        it('THEN is has a list of strategies', () => {
+            expect()
+        })
         
     });
-
 
 });
