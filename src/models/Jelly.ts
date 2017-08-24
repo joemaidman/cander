@@ -3,12 +3,23 @@ import Actor from '../interfaces/Actor'
 
 export default class Jelly implements Strategy{
 
-    constructor(){
+    run(actor: Actor, maxX: number, maxY: number, delta: number): void{
+        const xLeft = maxX - actor.x;
+        const yLeft = maxY - actor.y;
+    
+        if(Math.random() >= 0.5){
+            actor.x+= (Math.min(xLeft,1)*(delta/ 60));
+        }
+        else{
+            actor.x-= (Math.min(xLeft,1)*(delta/ 60));
+        }
 
-    }
-
-    run(actor: Actor): Actor{
-        return { ...actor, x: 2 }
+        if(Math.random() >= 0.5){
+            actor.y+= (Math.min(yLeft,1)*(delta/ 60));
+        }
+        else{
+            actor.y-= (Math.min(yLeft,1)*(delta/ 60));
+        }
     }
 
 }

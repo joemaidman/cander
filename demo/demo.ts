@@ -14,6 +14,8 @@ for(let num: number = 0; num < 100; num++){
     actors.push(new Square(
         Math.floor(Math.random() * 500) + 0,
          Math.floor(Math.random() * 500) + 0,
+         1,
+         1,
          30,
          30,
          Math.floor(Math.random() * 255) + 0,

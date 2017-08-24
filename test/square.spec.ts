@@ -11,14 +11,13 @@ describe('Square', () => {
 
     before(() => {
         strategies = new Array<Strategy>();
-        
-        square = new Square(1, 1, 1, 1, 1, 1, 1, 1, strategies);
+        square = new Square(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, strategies);
     });
 
     describe('Given a square has been created', () => {
 
         it('THEN is has a list of strategies', () => {
-            expect()
+            expect(square.strategies).to.equal(strategies);
         })
         
     });

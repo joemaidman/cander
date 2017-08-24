@@ -4,6 +4,7 @@ import Engine from '../src/Engine';
 import Actor from '../src/interfaces/Actor'
 import Square from '../src/models/square'
 import View from '../src/interfaces/View'
+import Strategy from '../src/interfaces/Strategy'
 import CanvasView from '../src/views/CanvasView'
 
 describe('Engine', () => {
@@ -11,10 +12,12 @@ describe('Engine', () => {
     let engine: Engine;
     let view: View;
     let actors: Array<Actor>;
+    let strategies: Array<Strategy>;
 
     before(() => {       
         actors = Array<Actor>();
-        actors.push(new Square(1,1,1,1,1,1,1,1));
+        strategies = new Array<Strategy>();
+        actors.push(new Square(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, strategies));
         view = new CanvasView(document.createElement('canvas'));
         engine = new Engine(view, actors);
     });
