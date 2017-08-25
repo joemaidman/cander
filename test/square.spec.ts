@@ -1,5 +1,4 @@
 import { expect } from 'chai';
-import * as chai from 'chai';
 
 import Square from '../src/models/Square';
 import Strategy from '../src/interfaces/Strategy'

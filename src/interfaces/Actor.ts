@@ -12,6 +12,7 @@ export default interface Actor {
     blue: number;
     opacity: number;
     strategies: Array<Strategy>;
+    rgba: string;
 
     update(strategy: Strategy, maxX: number, maxY: number, delta: number): void;
     

@@ -15,6 +15,7 @@ export default class Square implements Actor {
     blue: number;
     opacity: number;
     strategies: Array<Strategy>;
+    rgba: string
 
     constructor(x: number, y: number, 
         xVelocity: number = 0, yVelocity: number = 0, 
@@ -32,6 +33,10 @@ export default class Square implements Actor {
         this.strategies = strategies;
         this.xVelocity = xVelocity;
         this.yVelocity = yVelocity;
+        this.rgba = 'rgba('+ red + ',' + 
+        green + ',' + 
+        blue + "," + 
+        opacity + ')';
     }
 
     update(strategy: Strategy, maxX: number, maxY: number, delta: number): void{
