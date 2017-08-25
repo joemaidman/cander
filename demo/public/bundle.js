@@ -77,8 +77,8 @@ var canvas = document.getElementById('game');
 var viewPort = new CanvasView_1.default(canvas);
 var actors = new Array();
 var strategies = new Array();
-for (var num = 0; num < 100; num++) {
-    actors.push(new Square_1.default(Math.floor(Math.random() * 500) + 0, Math.floor(Math.random() * 500) + 0, 1, 1, 30, 30, Math.floor(Math.random() * 255) + 0, Math.floor(Math.random() * 255) + 0, Math.floor(Math.random() * 255) + 0, 1, strategies));
+for (var num = 0; num < 500; num++) {
+    actors.push(new Square_1.default(Math.floor(Math.random() * 500) + 0, Math.floor(Math.random() * 500) + 0, 1, 1, 5, 5, Math.floor(Math.random() * 255) + 0, Math.floor(Math.random() * 255) + 0, Math.floor(Math.random() * 255) + 0, 1, strategies));
 }
 var engine = new Engine_1.default(viewPort, actors);
 engine.start();
@@ -101,6 +101,7 @@ var Engine = (function () {
         this.targetFPS = 60;
         this.isStarted = false;
         this.isRunning = false;
+        this.timeStepLimit = 240;
     }
     Engine.prototype.start = function () {
         var _this = this;
@@ -109,34 +110,38 @@ var Engine = (function () {
             this.currentFrameID = requestAnimationFrame(function (timestamp) {
                 _this.draw();
                 _this.isRunning = true;
-                _this.lastFrameTimeMs = timestamp;
-                _this.currentFrameID = requestAnimationFrame(_this.loop.bind(_this));
+                _this.updateLastFrameTime(timestamp);
+                _this.prepareLoop();
             });
         }
     };
     Engine.prototype.stop = function () {
-        this.isRunning = false;
-        this.isStarted = false;
+        this.isRunning, this.isStarted = false;
         cancelAnimationFrame(this.currentFrameID);
     };
     Engine.prototype.loop = function (timeStamp) {
-        if (timeStamp < this.lastFrameTimeMs + this.timeStep) {
-            this.currentFrameID = requestAnimationFrame(this.loop.bind(this));
+        if (this.checkMaxFps(timeStamp)) {
+            this.prepareLoop();
             return;
         }
-        this.delta += timeStamp - this.lastFrameTimeMs;
-        this.lastFrameTimeMs = timeStamp;
-        var numUpdateSteps = 0;
+        else {
+            this.increaseDelta(timeStamp - this.lastFrameTimeMs);
+            this.updateLastFrameTime(timeStamp);
+            this.simulateTime();
+            this.draw();
+            this.prepareLoop();
+        }
+    };
+    Engine.prototype.simulateTime = function () {
         while (this.delta >= this.timeStep) {
             this.update(this.timeStep);
-            this.delta -= this.timeStep;
-            if (++numUpdateSteps >= 240) {
+            this.decreaseDelta(this.timeStep);
+            if (++this.currentUpdateSteps >= this.timeStepLimit) {
                 this.abort();
                 break;
             }
         }
-        this.draw();
-        this.currentFrameID = requestAnimationFrame(this.loop.bind(this));
+        this.currentUpdateSteps = 0;
     };
     Engine.prototype.update = function (delta) {
         var _this = this;
@@ -149,6 +154,22 @@ var Engine = (function () {
     };
     Engine.prototype.abort = function () {
         this.delta = 0;
+        this.currentUpdateSteps = 0;
+    };
+    Engine.prototype.checkMaxFps = function (timeStamp) {
+        return timeStamp < this.lastFrameTimeMs + this.timeStep;
+    };
+    Engine.prototype.prepareLoop = function () {
+        this.currentFrameID = requestAnimationFrame(this.loop.bind(this));
+    };
+    Engine.prototype.increaseDelta = function (amount) {
+        this.delta += amount;
+    };
+    Engine.prototype.decreaseDelta = function (amount) {
+        this.delta -= amount;
+    };
+    Engine.prototype.updateLastFrameTime = function (timeStamp) {
+        this.lastFrameTimeMs = timeStamp;
     };
     return Engine;
 }());
@@ -169,16 +190,16 @@ var Jelly = (function () {
         var xLeft = maxX - actor.x;
         var yLeft = maxY - actor.y;
         if (Math.random() >= 0.5) {
-            actor.x += (Math.min(xLeft, 1) * (delta / 60));
+            actor.x += Math.floor((Math.min(xLeft, 5) * (delta / 60)));
         }
         else {
-            actor.x -= (Math.min(xLeft, 1) * (delta / 60));
+            actor.x -= Math.floor((Math.min(xLeft, 5) * (delta / 60)));
         }
         if (Math.random() >= 0.5) {
-            actor.y += (Math.min(yLeft, 1) * (delta / 60));
+            actor.y += Math.floor((Math.min(yLeft, 5) * (delta / 60)));
         }
         else {
-            actor.y -= (Math.min(yLeft, 1) * (delta / 60));
+            actor.y -= Math.floor((Math.min(yLeft, 5) * (delta / 60)));
         }
     };
     return Jelly;
@@ -197,7 +218,11 @@ var CanvasView = (function () {
     function CanvasView(viewPort) {
         if (viewPort === void 0) { viewPort = document.createElement('canvas'); }
         this.viewPort = viewPort;
+        this.offScreenViewPort = document.createElement('canvas');
+        this.offScreenViewPort.width = viewPort.width;
+        this.offScreenViewPort.height = viewPort.height;
         this.context = this.viewPort.getContext('2d');
+        this.offScreenContext = this.offScreenViewPort.getContext('2d');
         this.width = viewPort.width;
         this.height = viewPort.height;
     }
@@ -205,22 +230,21 @@ var CanvasView = (function () {
         var _this = this;
         this.clearViewPort();
         actors.forEach(function (actor) {
-            _this.setContextFillStyle(actor.red, actor.green, actor.blue, actor.opacity);
+            _this.setContextFillStyle(actor.rgba);
             _this.fillRect(actor.x, actor.y, actor.width, actor.height);
         }, this);
+        this.context.clearRect(0, 0, this.width, this.height);
+        this.context.drawImage(this.offScreenViewPort, 0, 0);
     };
     CanvasView.prototype.clearViewPort = function () {
-        this.setContextFillStyle(255, 255, 255, 1);
-        this.context.clearRect(0, 0, this.width, this.height);
+        this.setContextFillStyle('white');
+        this.offScreenContext.clearRect(0, 0, this.width, this.height);
     };
-    CanvasView.prototype.setContextFillStyle = function (r, g, b, a) {
-        this.context.fillStyle = 'rgba(' + r + ',' +
-            g + ',' +
-            b + "," +
-            a + ')';
+    CanvasView.prototype.setContextFillStyle = function (rgba) {
+        this.offScreenContext.fillStyle = rgba;
     };
     CanvasView.prototype.fillRect = function (x, y, w, h) {
-        this.context.fillRect(x, y, w, h);
+        this.offScreenContext.fillRect(x, y, w, h);
     };
     return CanvasView;
 }());
@@ -249,6 +273,10 @@ var Square = (function () {
         this.strategies = strategies;
         this.xVelocity = xVelocity;
         this.yVelocity = yVelocity;
+        this.rgba = 'rgba(' + red + ',' +
+            green + ',' +
+            blue + "," +
+            opacity + ')';
     }
     Square.prototype.update = function (strategy, maxX, maxY, delta) {
         strategy.run(this, maxX, maxY, delta);

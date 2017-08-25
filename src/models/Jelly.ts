@@ -8,17 +8,17 @@ export default class Jelly implements Strategy{
         const yLeft = maxY - actor.y;
     
         if(Math.random() >= 0.5){
-            actor.x+= (Math.min(xLeft,1)*(delta/ 60));
+            actor.x+= Math.floor((Math.min(xLeft,5)*(delta/ 60)));
         }
         else{
-            actor.x-= (Math.min(xLeft,1)*(delta/ 60));
+            actor.x-= Math.floor((Math.min(xLeft,5)*(delta/ 60)));
         }
 
         if(Math.random() >= 0.5){
-            actor.y+= (Math.min(yLeft,1)*(delta/ 60));
+            actor.y+= Math.floor((Math.min(yLeft,5)*(delta/ 60)));
         }
         else{
-            actor.y-= (Math.min(yLeft,1)*(delta/ 60));
+            actor.y-= Math.floor((Math.min(yLeft,5)*(delta/ 60)));
         }
     }
 

@@ -13,6 +13,8 @@ export default class Engine {
     private lastFrameTimeMs: number;
     private targetFPS: number;
     private timeStep: number;
+    private timeStepLimit: number;
+    private currentUpdateSteps: number; 
 
     constructor(view: View, actors: Array<Actor>) {
         this.view = view;
@@ -22,6 +24,7 @@ export default class Engine {
         this.targetFPS = 60;
         this.isStarted = false;
         this.isRunning = false;
+        this.timeStepLimit = 240;
     }
 
     start(): void {
@@ -30,39 +33,42 @@ export default class Engine {
             this.currentFrameID = requestAnimationFrame( (timestamp) => {
                 this.draw();
                 this.isRunning = true;
-                this.lastFrameTimeMs = timestamp;
-                this.currentFrameID = requestAnimationFrame(this.loop.bind(this));
+                this.updateLastFrameTime(timestamp);
+                this.prepareLoop();
             });
         }
     }
 
     stop(): void {
-        this.isRunning = false;
-        this.isStarted = false;
+        this.isRunning, this.isStarted = false;
         cancelAnimationFrame(this.currentFrameID);
     }
 
     private loop(timeStamp: number): void {  
-        if (timeStamp < this.lastFrameTimeMs + this.timeStep) {
-            this.currentFrameID = requestAnimationFrame(this.loop.bind(this));
+        if(this.checkMaxFps(timeStamp)) {
+            this.prepareLoop();
             return;
         }
-
-        this.delta += timeStamp - this.lastFrameTimeMs;
-        this.lastFrameTimeMs = timeStamp;
-
-        let numUpdateSteps = 0;
-       
-        while (this.delta >= this.timeStep) {
-            this.update(this.timeStep);
-            this.delta -= this.timeStep;
-            if (++numUpdateSteps >= 240) {
-                this.abort();
-                break;
-            }
+        else{  
+            this.increaseDelta(timeStamp - this.lastFrameTimeMs);
+            this.updateLastFrameTime(timeStamp);
+            this.simulateTime();
+            this.draw();
+            this.prepareLoop();
         }
-        this.draw();
-        this.currentFrameID = requestAnimationFrame(this.loop.bind(this));
+    }
+    
+    private simulateTime(): void{ 
+        
+         while(this.delta >= this.timeStep) {
+             this.update(this.timeStep);
+             this.decreaseDelta(this.timeStep)
+             if (++this.currentUpdateSteps >= this.timeStepLimit) {
+                 this.abort();
+                 break;
+             }
+         }
+         this.currentUpdateSteps = 0;
     }
 
     private update(delta: number): void {
@@ -78,5 +84,27 @@ export default class Engine {
 
     private abort(): void {
         this.delta = 0;
+        this.currentUpdateSteps = 0;
     }
+
+    private checkMaxFps(timeStamp: number): Boolean{
+        return timeStamp < this.lastFrameTimeMs + this.timeStep;
+    }
+
+    private prepareLoop(): void{
+        this.currentFrameID = requestAnimationFrame(this.loop.bind(this));
+    }
+
+    private increaseDelta(amount: number): void{
+        this.delta += amount;
+    }
+
+    private decreaseDelta(amount: number): void{
+        this.delta -= amount;
+    }
+
+    private updateLastFrameTime(timeStamp: number): void{
+        this.lastFrameTimeMs = timeStamp;
+    }
+
 }

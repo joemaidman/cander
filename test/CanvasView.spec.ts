@@ -1,5 +1,4 @@
 import { expect } from 'chai';
-import * as chai from 'chai';
 
 import View from '../src/interfaces/View';
 import CanvasView from '../src/views/CanvasView';
