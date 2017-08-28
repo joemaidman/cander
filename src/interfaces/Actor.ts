@@ -16,4 +16,5 @@ export default interface Actor {
 
     update(strategy: Strategy, maxX: number, maxY: number, delta: number): void;
     
+    draw(context: CanvasRenderingContext2D): void;
 }
