@@ -43,4 +43,9 @@ export default class Square implements Actor {
         strategy.run(this, maxX, maxY, delta);
     }
 
+    draw(context: CanvasRenderingContext2D): void{
+        context.fillStyle = this.rgba;
+        context.fillRect(this.x, this.y, this.width, this.height);
+    }
+
 }

@@ -77,8 +77,8 @@ var canvas = document.getElementById('game');
 var viewPort = new CanvasView_1.default(canvas);
 var actors = new Array();
 var strategies = new Array();
-for (var num = 0; num < 500; num++) {
-    actors.push(new Square_1.default(Math.floor(Math.random() * 500) + 0, Math.floor(Math.random() * 500) + 0, 1, 1, 5, 5, Math.floor(Math.random() * 255) + 0, Math.floor(Math.random() * 255) + 0, Math.floor(Math.random() * 255) + 0, 1, strategies));
+for (var num = 0; num < 20000; num++) {
+    actors.push(new Square_1.default(Math.floor(Math.random() * 900) + 0, Math.floor(Math.random() * 900) + 0, 1, 1, 5, 5, Math.floor(Math.random() * 255) + 0, Math.floor(Math.random() * 255) + 0, Math.floor(Math.random() * 255) + 0, 1, strategies));
 }
 var engine = new Engine_1.default(viewPort, actors);
 engine.start();
@@ -230,21 +230,13 @@ var CanvasView = (function () {
         var _this = this;
         this.clearViewPort();
         actors.forEach(function (actor) {
-            _this.setContextFillStyle(actor.rgba);
-            _this.fillRect(actor.x, actor.y, actor.width, actor.height);
+            actor.draw(_this.offScreenContext);
         }, this);
         this.context.clearRect(0, 0, this.width, this.height);
         this.context.drawImage(this.offScreenViewPort, 0, 0);
     };
     CanvasView.prototype.clearViewPort = function () {
-        this.setContextFillStyle('white');
         this.offScreenContext.clearRect(0, 0, this.width, this.height);
-    };
-    CanvasView.prototype.setContextFillStyle = function (rgba) {
-        this.offScreenContext.fillStyle = rgba;
-    };
-    CanvasView.prototype.fillRect = function (x, y, w, h) {
-        this.offScreenContext.fillRect(x, y, w, h);
     };
     return CanvasView;
 }());
@@ -280,6 +272,10 @@ var Square = (function () {
     }
     Square.prototype.update = function (strategy, maxX, maxY, delta) {
         strategy.run(this, maxX, maxY, delta);
+    };
+    Square.prototype.draw = function (context) {
+        context.fillStyle = this.rgba;
+        context.fillRect(this.x, this.y, this.width, this.height);
     };
     return Square;
 }());

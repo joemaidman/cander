@@ -10,10 +10,10 @@ const canvas: HTMLCanvasElement = <HTMLCanvasElement> document.getElementById('g
 const viewPort: View =  new CanvasView(canvas);
 const actors: Array<Actor> = new Array<Square>();
 const strategies: Array<Strategy> = new Array<Jelly>();
-for(let num: number = 0; num < 500; num++){
+for(let num: number = 0; num < 20000; num++){
     actors.push(new Square(
-        Math.floor(Math.random() * 500) + 0,
-         Math.floor(Math.random() * 500) + 0,
+        Math.floor(Math.random() * 900) + 0,
+         Math.floor(Math.random() * 900) + 0,
          1,
          1,
          5,

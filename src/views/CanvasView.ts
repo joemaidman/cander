@@ -24,26 +24,14 @@ export default class CanvasView implements View {
     render(actors: Array<Actor>): void{
         this.clearViewPort();
         actors.forEach((actor) => {
-            this.setContextFillStyle(actor.rgba);
-            this.fillRect(actor.x, actor.y, actor.width, actor.height);
+            actor.draw(this.offScreenContext);
         }, this);
         this.context.clearRect(0,0,this.width, this.height);
         this.context.drawImage(this.offScreenViewPort, 0, 0);
     }
 
     private clearViewPort(): void {
-        this.setContextFillStyle('white');
         this.offScreenContext.clearRect(0,0,this.width, this.height);
     }
 
-    private setContextFillStyle(rgba: string): void {
-        this.offScreenContext.fillStyle = rgba;
-    }
-
-    private fillRect(x: number, y: number, w: number, h: number): void{
-        this.offScreenContext.fillRect(x, y, w, h);
-        // this.offScreenContext.beginPath();
-        // this.offScreenContext.arc(x,y,10,0,2*Math.PI)
-        // this.offScreenContext.stroke();
-    }
 }
