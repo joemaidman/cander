@@ -1,7 +1,7 @@
-import Actor from './Actor'
+import Actor from './Actor';
 
 export default interface View {
-    
+
     viewPort: HTMLCanvasElement;
     width: number;
     height: number;

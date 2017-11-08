@@ -1,10 +1,12 @@
-import Strategy from './Strategy'
+import Strategy from './Strategy';
+import ShapeType from './ShapeType';
 
 export default interface Actor {
     x: number;
     y: number;
     xVelocity: number;
     yVelocity: number;
+    rotation: number;
     width: number;
     height: number;
     red: number;
@@ -13,8 +15,7 @@ export default interface Actor {
     opacity: number;
     strategies: Array<Strategy>;
     rgba: string;
-
+    shapeType: ShapeType;
     update(strategy: Strategy, maxX: number, maxY: number, delta: number): void;
     
-    draw(context: CanvasRenderingContext2D): void;
 }

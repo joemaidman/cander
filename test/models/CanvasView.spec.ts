@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
-import View from '../src/interfaces/View';
-import CanvasView from '../src/views/CanvasView';
+import View from '../../src/interfaces/View';
+import CanvasView from '../../src/views/CanvasView';
 
 describe('CanvasView', () => {
 
