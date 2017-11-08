@@ -195,12 +195,6 @@ var Jelly = (function () {
         else {
             actor.x -= Math.floor((Math.min(xLeft, 5) * (delta / 60)));
         }
-        if (Math.random() >= 0.5) {
-            actor.y += Math.floor((Math.min(yLeft, 5) * (delta / 60)));
-        }
-        else {
-            actor.y -= Math.floor((Math.min(yLeft, 5) * (delta / 60)));
-        }
     };
     return Jelly;
 }());
@@ -267,7 +261,7 @@ var Square = (function () {
         this.yVelocity = yVelocity;
         this.rgba = 'rgba(' + red + ',' +
             green + ',' +
-            blue + "," +
+            blue + ',' +
             opacity + ')';
     }
     Square.prototype.update = function (strategy, maxX, maxY, delta) {
